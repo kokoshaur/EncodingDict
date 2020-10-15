@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Laba1.model;
 using Laba1.view;
 
@@ -8,13 +7,20 @@ namespace Laba1.view_model
 {
     abstract class Transmitter
     {
-        private static Repres writter;
+        public static int blockSize;
+        public static fileType type;
+
+        private static BitsFileShower bitsWritter;
+        private static FileShower writter;
+        private static ICrypto crypto;
         public static uint take = 0;
 
-        public static void init(string pathToBook = null, string pathToInput = null, string pathToOutput = null)
+        public static void init(ICrypto methodCrypto, fileType type, string pathToInput = null, string pathToOutput = null, string pathToBook = null)
         {
-            writter = new Repres(pathToBook, pathToInput, pathToOutput);
-            message("Врайтер создался");
+            Transmitter.type = type;
+            bitsWritter = new BitsFileShower(pathToInput, pathToOutput);
+            //writter = new FileShower(secondPath, pathToInput, pathToOutput);
+            crypto = methodCrypto;
         }
 
         public static void message(string text)
@@ -28,28 +34,30 @@ namespace Laba1.view_model
 
         public static void setPathToOut(string path)
         {
-            writter.refreshOut(path);
+            bitsWritter.pathToOut = path;
+            //writter.refreshOut(path);
         }
 
         public static void setPathToInp(string path)
         {
-            writter.refresInp(path);
+            bitsWritter.pathToFile = path;
+            //writter.refresInp(path);
         }
 
         public static void setPathToBook(string path)
         {
-            writter.refreshBook(path);
+            writter.refreshSecondSubj(path);
         }
 
         public static void startEncrypt()
         {
-            Crypt.createDict();
-            Crypt.encryptFile();
+            crypto.init();
+            crypto.encryptFile();
         }
 
         public static void startAnalys()
         {
-            foreach (KeyValuePair<Place, int> keyValue in Analyst.FreqAnal())
+            foreach (KeyValuePair<Place, int> keyValue in AnalystLaba1.FreqAnal())
                 Console.WriteLine(keyValue.Key.row + "," + keyValue.Key.colomn + " : " + keyValue.Value + " (" +
                                   keyValue.Value * 100 / take + "%)");
             take = 0;
@@ -57,41 +65,46 @@ namespace Laba1.view_model
 
         public static void startDecrypt()
         {
-            Crypt.decryptoFile();
+            crypto.decryptoFile();
         }
 
         public static void finish()
         {
             writter.finish();
         }
+
+        public static string getCryptoLine()
+        {
+            return writter.getCryptoLine();
+        }
+
+        public static string getBlock()
+        {
+            return writter.getBlock();
+        }
+
+        public static byte[] getNextBlock()
+        {
+            return bitsWritter.getNextBlock();
+        }
+
         public static void showLine(string line)
         {
             writter.writeResultLine(line);
         }
-
-        public static void show(string result)
+        public static void writeBlock(byte[] block)
         {
-
+            bitsWritter.writeBlock(block);
         }
 
-        public static string getBook()
+        public static void BitsFinish()
         {
-            return writter.getBook();
+            bitsWritter.finish();
         }
 
-        public static string getLine()
+        public static void itIsLastBlock(byte[] block)
         {
-            return writter.getLine();
-        }
-
-        public static string getFile()
-        {
-            return writter.getFile();
-        }
-
-        public static string getFileLine()
-        {
-            return writter.getFileLine();
+            crypto.itIsLast(block);
         }
     }
 }

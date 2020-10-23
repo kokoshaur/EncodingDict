@@ -5,9 +5,9 @@ using Laba1.view_model;
 
 namespace Laba1.model
 {
-    abstract class AnalystLaba1
+    class AnalystLaba1 : IAnalyst
     {
-        public static Dictionary<Place, int> FreqAnal()
+        public Dictionary<Place, int> FreqAnal()
         {
             Dictionary<Place, int> asnver = new Dictionary<Place, int>();
 

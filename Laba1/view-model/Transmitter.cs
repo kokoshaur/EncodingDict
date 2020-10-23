@@ -49,18 +49,23 @@ namespace Laba1.view_model
             writter.refreshSecondSubj(path);
         }
 
-        public static void startEncrypt()
+        public static void startEncrypt(byte pos = 0)
         {
             crypto.init();
-            crypto.encryptFile();
+            crypto.encryptFile(pos);
         }
 
-        public static void startAnalys()
+        public static void startAnalys(IAnalyst anal)
         {
-            foreach (KeyValuePair<Place, int> keyValue in AnalystLaba1.FreqAnal())
+            foreach (KeyValuePair<Place, int> keyValue in anal.FreqAnal())
                 Console.WriteLine(keyValue.Key.row + "," + keyValue.Key.colomn + " : " + keyValue.Value + " (" +
                                   keyValue.Value * 100 / take + "%)");
             take = 0;
+        }
+
+        public static void startAnalys2(IAnalyst anal)
+        {
+
         }
 
         public static void startDecrypt()

@@ -6,5 +6,6 @@ namespace Laba1.model
 {
     interface IAnalyst
     {
+        public Dictionary<Place, int> FreqAnal();
     }
 }

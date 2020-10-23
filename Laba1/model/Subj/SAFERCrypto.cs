@@ -25,7 +25,7 @@ namespace Laba1.model.Subj
         {
             Transmitter.blockSize = key.Length;
         }
-        public void encryptFile()       //Шифрует файл
+        public void encryptFile(byte pos = 0)       //Шифрует файл
         {
             key = (byte[])subjKey.Clone();
             NextIV = (byte[])IV.Clone();
@@ -34,7 +34,7 @@ namespace Laba1.model.Subj
 
             while ((block = Transmitter.getNextBlock()) != null)
             {
-                cryptoBlock(block);
+                cryptoBlock(block, pos);
             }
 
             Transmitter.BitsFinish();
@@ -61,9 +61,9 @@ namespace Laba1.model.Subj
                 decryptoBlock(block);
         }
 
-        private void cryptoBlock(byte[] block)  //Шифрует 1 блок
+        private void cryptoBlock(byte[] block, byte pos = 0)  //Шифрует 1 блок
         {
-            CFB(ref block);
+            CFB(ref block, pos);
             NextIV = (byte[])block.Clone();
 
             for (int i = 0; i < (block.Length/16); i++)
@@ -95,11 +95,15 @@ namespace Laba1.model.Subj
             Transmitter.writeBlock(block);
         }
 
-        private void CFB(ref byte[] block)  //СФБ
+        private void CFB(ref byte[] block, byte mis = 0)  //СФБ
         {
             if (isCrypto)
                 for (int i = 0; i < block.Length; i++)
-                    block[i] += NextIV[i];
+                    if ((mis != 0) && (mis == i))
+                        block[i] += (byte) (NextIV[i] + mis);
+                    else
+                        block[i] += NextIV[i];
+
             else
                 for (int i = 0; i < block.Length; i++)
                     block[i] -= NextIV[i];

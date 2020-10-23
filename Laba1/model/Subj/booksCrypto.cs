@@ -47,7 +47,7 @@ namespace Laba1.model
             }
         }
 
-        public void encryptFile()
+        public void encryptFile(byte pos = 0)
         {
             string line;
             Random rnd = new Random();

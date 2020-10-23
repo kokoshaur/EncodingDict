@@ -28,7 +28,7 @@ namespace Laba1
 
             Transmitter.startDecrypt();
 
-            Transmitter.startAnalys();
+            Transmitter.startAnalys(new AnalystLaba1());
         }
 
         private static void Laba2() //Вариант 18. Реализовать алгоритм шифрования SAFER+.
@@ -50,6 +50,8 @@ namespace Laba1
             Transmitter.setPathToOut("../../../Example/DecryptoResult" + type);
 
             Transmitter.startDecrypt();
+
+            Transmitter.startAnalys2(new AnalystLaba2(new SAFERCrypto(key, IV), fileType.BMP, "../../../Example/File" + type, "../../../Example/ResultAnalist" + type, "../../../Example/DecryptoTest" + type));
         }
     }
 }
